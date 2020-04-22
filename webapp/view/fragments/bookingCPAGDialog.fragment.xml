@@ -1,0 +1,117 @@
+<core:FragmentDefinition xmlns:layout="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns:table="sap.ui.table" xmlns:f="sap.ui.layout.form"
+	xmlns:l="sap.ui.layout" xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:valuehelp="sap.ui.comp.valuehelpdialog" xmlns:fb="sap.ui.comp.filterbar" xmlns:c="com.seaco.sd_fiori.control">
+	<!--<Dialog contentHeight="90%" contentWidth="90%" draggable="true" showHeader="false">-->
+	<!--	<Page title="{booking>/PriceAgreementTitle}">-->
+	<!--<Panel expanded="true">-->
+	<c:CopyPasteTable width="65%" visible="{booking>/BOOKTableVisible}" id="idCPAGBOOKTable" rows="{booking>/itemsCPAGBOOK}"
+		selectionMode="Multi" visibleRowCountMode="Fixed" visibleRowCount="1">
+		<c:toolbar>
+			<OverflowToolbar height="3rem">
+				<Title text=""/>
+				<ToolbarSpacer/>
+				<Button id="idButtonCopyCPAGBOOK" text="Copy" press="copyRowCPAGTable"
+					visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+				<Button id="idButtonAddCPAGBOOK" text="Add" press="addRowCPAGTable"
+					visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+				<Button id="idButtonDeleteCPAGBOOK" text="Delete" press="deleteRowCPAGTable"
+					visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+			</OverflowToolbar>
+		</c:toolbar>
+		<c:columns>
+			<table:Column>
+				<Label text="Condition Type" class="wraptextcol"/>
+				<table:template>
+					<!--<Input value="{booking>ConditionType}" enabled="{booking>ConditionEnabled}"/> value="{booking>ConditionTypeText}"-->
+					<ComboBox showSecondaryValues="true" selectedKey="{booking>ConditionType}"
+						enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"
+						items="{ path: 'oConditionModelBOOKCPAG>/', templateShareable:true }" selectionChange="onSelectConditionTypeBOOK">
+						<core:ListItem key="{oConditionModelBOOKCPAG>ConditionType}" text="{oConditionModelBOOKCPAG>ConditionTypeText}"
+							additionalText="{oConditionModelBOOKCPAG>ConditionType}"/>
+					</ComboBox>
+				</table:template>
+			</table:Column>
+			<!--<table:Column width="180px">-->
+			<!--	<Label text="Price Type" class="wraptextcol"/>-->
+			<!--	<table:template>-->
+			<!--<Input value="{booking>PriceTypeText}" enabled="{booking>PriceTypeEnabled}"/>-->
+			<!--		<ComboBox selectedKey="{booking>PriceType}" value="{booking>PriceTypeText}" enabled="{booking>PriceTypeEnabled}"-->
+			<!--			items="{ path: 'oPriceModelBOOKCPAG>/', templateShareable:true }" selectionChange="onSelectPriceType">-->
+			<!--			<core:Item key="{oPriceModelBOOKCPAG>PriceType}" text="{oPriceModelBOOKCPAG>PriceTypeText}"/>-->
+			<!--		</ComboBox>-->
+			<!--	</table:template>-->
+			<!--</table:Column>-->
+			<table:Column width="14%">
+				<Label text="Location" class="wraptextcol"/>
+				<table:template>
+					<ComboBox selectedKey="{booking>LocCode}" value="{booking>Location}"
+						enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"
+						items="{ path: 'oCityModelCPAG>/Cities', templateShareable:true }">
+						<core:Item key="{oCityModelCPAG>key}" text="{oCityModelCPAG>text}"/>
+					</ComboBox>
+				</table:template>
+			</table:Column>
+			<table:Column width="14%">
+				<Label text="Product" class="wraptextcol"/>
+				<table:template>
+					<ComboBox value="{booking>UnitType}" enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"
+						items="{ path: 'oProdModelCPAG>/Prods', templateShareable:true }">
+						<core:Item key="{oProdModelCPAG>key}" text="{oProdModelCPAG>text}"/>
+					</ComboBox>
+				</table:template>
+			</table:Column>
+			<!--<table:Column>-->
+			<!--	<Label text="Prod. Hierarchy" class="wraptextcol"/>-->
+			<!--	<table:template>-->
+			<!--		<ComboBox value="{booking>ProdHier}" enabled="{booking>ProdHierEnabled}"-->
+			<!--			items="{ path: 'oProdHierModelCPAG>/Prods', templateShareable:true }">-->
+			<!--			<core:Item key="{oProdHierModelCPAG>key}" text="{oProdHierModelCPAG>text}"/>-->
+			<!--		</ComboBox>-->
+			<!--	</table:template>-->
+			<!--</table:Column>-->
+			<table:Column width="12%">
+				<Label text="Amount" class="wraptextcol"/>
+				<table:template>
+					<Input value="{booking>Amount}" type="Number" enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+				</table:template>
+			</table:Column>
+			<table:Column width="12%">
+				<Label text="Valid From" class="wraptextcol"/>
+				<table:template>
+					<DatePicker value="{booking>ValidFrom}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"
+						enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+				</table:template>
+			</table:Column>
+			<table:Column width="12%">
+				<Label text="Valid To" class="wraptextcol"/>
+				<table:template>
+					<DatePicker value="{booking>ValidTo}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"
+						enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>
+				</table:template>
+			</table:Column>
+			<table:Column width="8%">
+				<Label text="Currency" class="wraptextcol"/>
+				<table:template>
+					<!--<Input value="{booking>Currency}" enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"/>-->
+					<ComboBox enabled="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}" selectedKey="{path : 'booking>Currency'}"
+						items="{ path: 'oCurrencyDataModel>/', templateShareable:true }">
+						<core:ListItem key="{oCurrencyDataModel>key}" text="{oCurrencyDataModel>text}" additionalText="{oCurrencyDataModel>key}"/>
+					</ComboBox>
+				</table:template>
+			</table:Column>
+		</c:columns>
+	</c:CopyPasteTable>
+	<!--		</Panel>-->
+	<!--		<footer>-->
+	<!--			<Toolbar>-->
+	<!--				<Button id="messagePopoverBtnCPAG" icon="sap-icon://message-popup" type="Emphasized" text="{=${message>/}.length}"-->
+	<!--					visible="{=!!${message>/}.length}" press="handleMessagePopoverPress"/>-->
+	<!--				<ToolbarSpacer/>-->
+	<!--<Button press="onPressAddConditionCPAG" text="Add Condition" type="Accept"></Button>-->
+	<!--				<Button press="onPressConfirmSelectCPAG" text="OK" visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}"></Button>-->
+	<!--				<Button press="onPressDialogCancel" text="Close"></Button>-->
+	<!--			</Toolbar>-->
+	<!--		</footer>-->
+	<!--	</Page>-->
+	<!--</Dialog>-->
+</core:FragmentDefinition>

@@ -1,0 +1,353 @@
+<mvc:View controllerName="com.seaco.sd_fiori.controller.Worklist" xmlns="sap.m" xmlns:semantic="sap.f.semantic" xmlns:mvc="sap.ui.core.mvc"
+	xmlns:fb="sap.ui.comp.filterbar" xmlns:f="sap.f" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table">
+	<f:DynamicPage id="idDynamicPage" headerExpanded="true" showFooter="false" class="sapUiNoContentPadding" xmlns:l="sap.ui.layout">
+		<f:title>
+			<f:DynamicPageTitle>
+				<f:heading>
+					<Text id="page" class="cockpitTitle" text="Customer Service Cockpit"/>
+				</f:heading>
+			</f:DynamicPageTitle>
+		</f:title>
+		<f:header>
+			<f:DynamicPageHeader pinnable="true">
+				<f:content>
+					<fb:FilterBar clear="onClearFB" search="getTransactions" useToolbar="false" showClearOnFB="true" showGoOnFB="true" showRestoreOnFB="false">
+						<fb:filterGroupItems>
+							<fb:FilterGroupItem groupName="header" name="TransType" label="{i18n>TransType}" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox id="idTransTypeFilter" selectedKey="{worklistView>/TransType}" items="{ path: 'oTransTypeModel>/type', templateShareable:true }"
+										name="TransType" change="resetTransType">
+										<core:Item key="{oTransTypeModel>key}" text="{oTransTypeModel>text}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="idLeaseFilter" groupName="header" name="Lease" label="{i18n>Lease}" visibleInFilterBar="true">
+								<fb:control>
+									<Input value="{worklistView>/Lease}"></Input>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="idRetschFilter" groupName="header" name="Retsch" label="{i18n>Retsch}" visibleInFilterBar="true">
+								<fb:control>
+									<Input value="{worklistView>/Retsch}"></Input>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem visible="false" id="idBookingorreturnFilter" groupName="header" name="Bookingorreturn" label="{i18n>Bookingorreturn}"
+								visibleInFilterBar="true">
+								<fb:control>
+									<Input value="{worklistView>/Bookingorreturn}"></Input>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="Customer" label="{i18n>Customer}" visibleInFilterBar="true">
+								<fb:control>
+									<!--<Input value="{worklistView>/Customer}"></Input>-->
+									<ComboBox showSecondaryValues="true" id="idCustomerFilter" selectedKey="{worklistView>/Customername}" value="{worklistView>/Customer}"
+										items="{ path: 'oCustomerModel>/', templateShareable:true }" name="Customer">
+										<core:ListItem key="{oCustomerModel>text}" text="{oCustomerModel>key}" additionalText="{oCustomerModel>text}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<!--<fb:FilterGroupItem groupName="header" name="Customername" label="{i18n>Customername}" visibleInFilterBar="true">-->
+							<!--	<fb:control>-->
+							<!--		<Input value="{worklistView>/Customername}"></Input>-->
+							<!--	</fb:control>-->
+							<!--</fb:FilterGroupItem>-->
+							<fb:FilterGroupItem groupName="header" name="AccManager" label="{i18n>AccManager}" visibleInFilterBar="true">
+								<fb:control>
+									<!--<Input value="{worklistView>/Customer}"></Input>-->
+									<ComboBox showSecondaryValues="true" id="idAccManagerFilter" selectedKey="{worklistView>/AccManagername}" value="{worklistView>/AccManager}"
+										items="{ path: 'oAccManagerModel>/', templateShareable:true }" name="AccManager">
+										<core:ListItem key="{oAccManagerModel>text}" text="{oAccManagerModel>key}" additionalText="{oAccManagerModel>text}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="CreationPeriodFrom" label="{i18n>CreationPeriodFrom}" visibleInFilterBar="true">
+								<fb:control>
+									<DatePicker width="75%" value="{worklistView>/CreationPeriodFrom}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="CreationPeriodTo" label="{i18n>CreationPeriodTo}" visibleInFilterBar="true">
+								<fb:control>
+									<DatePicker width="75%" value="{worklistView>/CreationPeriodTo}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="ChangePeriodFrom" label="{i18n>ChangePeriodFrom}" visibleInFilterBar="true">
+								<fb:control>
+									<DatePicker width="75%" value="{worklistView>/ChangePeriodFrom}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="ChangePeriodTo" label="{i18n>ChangePeriodTo}" visibleInFilterBar="true">
+								<fb:control>
+									<DatePicker width="75%" value="{worklistView>/ChangePeriodTo}" valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="header" name="HeaderStatus" label="{i18n>HeaderStatus}" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox showSecondaryValues="true" id="idHeaderStatusFilter" selectedKey="{worklistView>/HeaderStatus}"
+										items="{ path: 'oHeaderStatusModel>/', templateShareable:true }" name="HeaderStatus">
+										<core:ListItem key="{oHeaderStatusModel>key}" text="{oHeaderStatusModel>text}" additionalText="{oHeaderStatusModel>additionalText}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem id="idExtRaFilter" groupName="header" name="ExtRa" label="{i18n>ExtRa}" visibleInFilterBar="true">
+								<fb:control>
+									<Input value="{worklistView>/ExtRa}"></Input>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="item" name="LocCode" label="{i18n>LocCode}" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox showSecondaryValues="true" id="idLocationFilter" selectedKey="{worklistView>/LocCode}"
+										items="{ path: 'oLocationModel>/', templateShareable:true }" name="Location">
+										<core:ListItem key="{oLocationModel>key}" text="{oLocationModel>text}" additionalText="{oLocationModel>key}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="item" name="UnitType" label="{i18n>UnitType}" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox showSecondaryValues="false" id="idUnitTypeFilter" selectedKey="{worklistView>/UnitType}"
+										items="{ path: 'oUnitTypeModel>/', templateShareable:true }" name="UnitType">
+										<core:ListItem key="{oUnitTypeModel>key}" text="{oUnitTypeModel>key}" additionalText="{oUnitTypeModel>key}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="item" name="ProdCate" label="{i18n>ProdCate}" visibleInFilterBar="true">
+								<fb:control>
+									<ComboBox showSecondaryValues="false" id="idProdCateFilter" selectedKey="{worklistView>/ProdCate}"
+										items="{ path: 'oProdCateModel>/', templateShareable:true }" name="ProdCate">
+										<core:ListItem key="{oProdCateModel>key}" text="{oProdCateModel>key}" additionalText="{oProdCateModel>key}"/>
+									</ComboBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+							<fb:FilterGroupItem groupName="item" name="SerialNos" label="{i18n>SerialNos}" visibleInFilterBar="true">
+								<fb:control>
+									<FlexBox direction="Row">
+										<Input maxLength="12" value="{worklistView>/SerialNos}">
+											<layoutData>
+												<FlexItemData growFactor="3"/>
+											</layoutData>
+										</Input>
+										<core:Icon src="sap-icon://value-help" press="handlePopoverSerialNo" class="iconsF4"/>
+									</FlexBox>
+								</fb:control>
+							</fb:FilterGroupItem>
+						</fb:filterGroupItems>
+					</fb:FilterBar>
+				</f:content>
+			</f:DynamicPageHeader>
+		</f:header>
+		<f:content class="sapFDynamicPageAlignContent">
+			<table:Table id="idMasterTable" visible="{ path:'worklistView>/masterTableVisible'}" rows="{ path:'worklistView>/listData'}"
+				selectionMode="Multi" visibleRowCountMode="Fixed" visibleRowCount="{ path:'worklistView>/worklistTableVisibleRowCount'}">
+				<table:extension>
+					<Toolbar>
+						<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+						<ToolbarSpacer/>
+						<MenuButton text="Lease">
+							<menu>
+								<Menu>
+									<MenuItem id="idButtonCRE_LEAS" text="Create" press="onPress"/>
+									<MenuItem id="idButtonCOP_LEAS" text="Copy" press="onPress"/>
+								</Menu>
+							</menu>
+						</MenuButton>
+						<MenuButton text="Return Schedule">
+							<menu>
+								<Menu>
+									<MenuItem id="idButtonCRE_RSCH" text="Create" press="onPress">
+										<!--<customData>-->
+										<!--	<core:CustomData key="target" value="p1"/>-->
+										<!--</customData>-->
+									</MenuItem>
+									<MenuItem id="idButtonCOP_RSCH" text="Copy" press="onPress"/>
+								</Menu>
+							</menu>
+						</MenuButton>
+						<MenuButton text="Lease and RS">
+							<menu>
+								<Menu>
+									<MenuItem id="idButtonCRE_BOTH" text="Create" press="onPress">
+										<!--<customData>-->
+										<!--	<core:CustomData key="target" value="p1"/>-->
+										<!--</customData>-->
+									</MenuItem>
+									<MenuItem id="idButtonCOP_BOTH" text="Copy" press="onPress"/>
+								</Menu>
+							</menu>
+						</MenuButton>
+						<ToolbarSeparator/>
+						<Button id="idButtonCRE_BOOK" text="Create Booking" press="onPressCRE_BOOK"/>
+						<Button id="idButtonCRE_RETA" text="Create Return Auth."/>
+						<ToolbarSeparator/>
+						<Button press="onPressExcelDownload" icon="sap-icon://excel-attachment" tooltip="Excel Download"/>
+					</Toolbar>
+				</table:extension>
+				<table:columns>
+					<table:Column id="idColRetsch" width="120px" name="Retsch" sortProperty="Retsch" filterProperty="Retsch">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Retsch'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Retsch}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<Link text="{worklistView>Retsch}" press="onPressListItem"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColLease" width="120px" name="Lease" sortProperty="Lease" filterProperty="Lease">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Lease'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Lease}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<Link text="{worklistView>Lease}" press="onPressListItem"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColBookingorreturn" width="120px" name="Bookingorreturn" sortProperty="Bookingorreturn" filterProperty="Bookingorreturn">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Bookingorreturn'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text id="idColBookingorreturnText" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<Link text="{worklistView>Bookingorreturn}" press="onPressEDI_BOOKRA"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColExtref" width="120px" name="Extref" sortProperty="Extref" filterProperty="Extref">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Extref'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text id="idColExtrefText" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{worklistView>Extref}"/>
+						</table:template>
+					</table:Column >
+					<table:Column id="idColCustomer" width="180px" name="Customer" sortProperty="Customer" filterProperty="Customer">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Customer'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Customer}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<Link text="{worklistView>Customer}" press="onPressListItem"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColCustomername" name="Customername" sortProperty="Customername" filterProperty="Customername">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Customername'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Customername}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{worklistView>Customername}"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColAccManager" width="180px" name="AccManager" sortProperty="AccManager" filterProperty="AccManager">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'AccManager'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>AccManager}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<Link text="{worklistView>AccManager}" press="onPressListItem"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColAccManagername" name="AccManagername" sortProperty="AccManagername" filterProperty="AccManagername">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'AccManagername'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>AccManagername}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{worklistView>AccManagername}"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColValidFrom" width="180px" name="ValidFrom" sortProperty="ValidFrom" filterProperty="ValidFrom">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'ValidFrom'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>ValidFrom}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{parts:[{path:'worklistView>ValidFrom'}], formatter:'.formatter.DateFormatter'}"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColValidTo" width="180px" name="ValidTo" sortProperty="ValidTo" filterProperty="ValidTo">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'ValidTo'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>ValidTo}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{parts:[{path:'worklistView>ValidTo'}], formatter:'.formatter.DateFormatter'}"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColSalesorg" width="120px" name="Salesorg" sortProperty="Salesorg" filterProperty="Salesorg">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Salesorg'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Salesorg}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{worklistView>Salesorg}"/>
+						</table:template>
+					</table:Column>
+					<table:Column id="idColStatustext" width="200px" name="Statustext" sortProperty="Statustext" filterProperty="Statustext">
+						<!--visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Status'}], formatter:'.formatter.ColumnVisibility1'}">-->
+						<Text text="{i18n>Status}" class="wraptextcol" wrapping="true"/>
+						<table:template>
+							<ObjectIdentifier text="{worklistView>Statustext}"/>
+						</table:template>
+					</table:Column>
+				</table:columns>
+			</table:Table>
+			<!--<Table id="idMasterTable" visible="{ path:'worklistView>/masterTableVisible'}" items="{ path:'worklistView>/listData'}" growing="true"-->
+			<!--	growingScrollToLoad="true" updateFinished="onUpdateFinished">-->
+			<!--	<headerToolbar>-->
+			<!--		<Toolbar>-->
+			<!--			<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>-->
+			<!--			<ToolbarSpacer/>-->
+			<!--			<Button press="onTableSettings" text="Create" tooltip="Settings"/>-->
+			<!--			<Button press="onTableSettings" icon="sap-icon://excel-attachment" tooltip="Settings"/>-->
+			<!--		</Toolbar>-->
+			<!--	</headerToolbar>-->
+			<!--	<columns>-->
+			<!--		<Column width="120px">-->
+			<!--			<Text text="{i18n>Retsch}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Retsch'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="120px">-->
+			<!--			<Text text="{i18n>Lease}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Lease'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="120px">-->
+			<!--			<Text text="{path: 'worklistView>/TransType', formatter:'.formatter.BookingRAColumnText1'}"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'BookingRA'}], formatter:'.formatter.ColumnVisibility1'}"-->
+			<!--				class="wraptextcol" wrapping="true"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="120px">-->
+			<!--			<Text text="{path: 'worklistView>/TransType', formatter:'.formatter.ExtrefColumnText1'}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Extref'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="180px">-->
+			<!--			<Text text="{i18n>Customer}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Customer'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column>-->
+			<!--			<Text text="{i18n>Customername}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Customername'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="180px">-->
+			<!--			<Text text="{i18n>AccManager}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'AccManager'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column>-->
+			<!--			<Text text="{i18n>AccManagername}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'AccManagername'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="180px">-->
+			<!--			<Text text="{i18n>ValidFrom}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'ValidFrom'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="180px">-->
+			<!--			<Text text="{i18n>ValidTo}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'ValidTo'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="120px">-->
+			<!--			<Text text="{i18n>Salesorg}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Salesorg'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--		<Column width="200px">-->
+			<!--			<Text text="{i18n>Status}" class="wraptextcol" wrapping="true"-->
+			<!--				visible="{parts:[{path:'worklistView>/TransType'},{path:'worklistView>/forColumn', value: 'Status'}], formatter:'.formatter.ColumnVisibility1'}"/>-->
+			<!--		</Column>-->
+			<!--	</columns>-->
+			<!--	<items>-->
+			<!--type="Navigation" press="onPressListItem"-->
+			<!--		<ColumnListItem>-->
+			<!--			<cells>-->
+			<!--<Link text="{worklistView>Retsch}" press="onPressListItem"/>-->
+			<!--<Link text="{worklistView>Lease}" press="onPressListItem"/>-->
+			<!--<Link text="{worklistView>Bookingorreturn}" press="onPressListItem"/>-->
+			<!--<ObjectIdentifier text="{worklistView>Extref}"/>-->
+			<!--<Link text="{worklistView>Customer}" press="onPressListItem"/>-->
+			<!--<ObjectIdentifier text="{worklistView>Customername}"/>-->
+			<!--<Link text="{worklistView>AccManager}" press="onPressListItem"/>-->
+			<!--<ObjectIdentifier text="{worklistView>AccManagername}"/>-->
+			<!--<ObjectIdentifier text="{worklistView>ValidFrom}"/>-->
+			<!--<ObjectIdentifier text="{worklistView>ValidTo}"/>-->
+			<!--<ObjectIdentifier text="{worklistView>Salesorg}"/>-->
+			<!--<ObjectIdentifier text="{worklistView>Statustext}"/>-->
+			<!--			</cells>-->
+			<!--		</ColumnListItem>-->
+			<!--	</items>-->
+			<!--</Table>-->
+		</f:content>
+	</f:DynamicPage>
+</mvc:View>

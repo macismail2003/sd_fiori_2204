@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<edmx:Edmx Version="1.0" xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx">
+	<edmx:DataServices m:DataServiceVersion="2.0" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+		<Schema Namespace="BookingModel" xmlns="http://schemas.microsoft.com/ado/2008/09/edm"
+			xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices" xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata">
+			<EntityType Name="Booking">
+				<Key>
+					<PropertyRef Name="Customer"/>
+					<!--<PropertyRef Name="Lease"/>-->
+				</Key>
+				<Property Name="Customer" Type="Edm.String" MaxLength="10"/>
+				<Property Name="Lease" Type="Edm.String" MaxLength="10"/>
+				<Property Name="CustomerName" Type="Edm.String" MaxLength="35"/>
+				<Property Name="SalesOrg" Type="Edm.String" MaxLength="4"/>
+				<Property Name="LeaseType" Type="Edm.String" MaxLength="4"/>
+				<Property Name="CreationDate" Type="Edm.DateTime" Nullable="false"/>
+				<Property Name="CreatedBy" Type="Edm.String" MaxLength="12"/>
+				<Property Name="Material" Type="Edm.String" MaxLength="18"/>
+				<Property Name="Status" Type="Edm.String" MaxLength="50"/>
+				<Property Name="EmployeeResponsible" Type="Edm.String" MaxLength="50"/>
+			</EntityType>
+			<EntityContainer Name="BookingLeasing" m:IsDefaultEntityContainer="true" xmlns:p7="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+				<EntitySet EntityType="BookingModel.Booking" Name="Bookings"/>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>

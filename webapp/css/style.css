@@ -1,0 +1,18 @@
+.wraptextcol {
+    white-space: pre-wrap !important;
+    font-weight: bolder !important;
+}
+
+.iconsF4 {
+    padding: 5px;
+    color: #000071;
+}
+
+.cockpitTitle {
+    text-align: center;
+    font-size: 2rem;
+    font-family: "72", "72full", Arial, Helvetica, sans-serif;
+    line-height: normal;
+    color: #000268;
+    justify-content: center;
+}

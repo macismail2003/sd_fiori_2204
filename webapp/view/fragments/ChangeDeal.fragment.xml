@@ -1,0 +1,112 @@
+<core:FragmentDefinition xmlns:m="sap.m" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.uxap" xmlns:u="sap.ui.unified" xmlns:uxap="sap.uxap"
+	xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:table="sap.ui.table" xmlns:l="sap.ui.layout">
+	<!--<m:Page title="Leasing Deal: New">-->
+	<ObjectPageLayout showFooter="true">
+		<headerTitle>
+			<ObjectPageHeader objectTitle="Opportunity Details"></ObjectPageHeader>
+		</headerTitle>
+		<headerContent>
+			<m:Title text="{Customer}" level="H2"/>
+		</headerContent>
+		<sections>
+			<ObjectPageSection title="Items">
+				<subSections>
+					<ObjectPageSubSection mode="Expanded">
+						<table:Table id="idDealItemTable" rows="{ path:'objectView>/Change'}" selectionMode="Single" visibleRowCount="{objectView>/itemsTableRowVisible}">
+							<table:extension>
+								<m:Toolbar design="Transparent" class="sapUiMediumMarginTop">
+									<m:ToolbarSpacer/>
+									<m:Button text="{i18n>Copy}" press="onCopyItems"/>
+									<m:Button tooltip="{i18n>Add}" icon="sap-icon://add" press="onAddItems"/>
+									<!--<m:Button tooltip="Edit" icon="sap-icon://edit" press="onEdit" visible="{Deal>/EditFlag}"/>-->
+								</m:Toolbar>
+							</table:extension>
+							<table:columns>
+								<table:Column width="auto" filterProperty="Customer" sortProperty="Customer">
+									<m:Label text="{i18n>UnitType}"/>
+									<table:template>
+										<!--<m:MultiInput valueHelpRequest="onValueHelpSerialNoRequested" value="{dealItemModel>UnitType}"/>-->
+										<m:Input value="{objectView>Customer}"/>
+									</table:template>
+								</table:Column>
+								<table:Column width="auto" filterProperty="Lease" sortProperty="Lease">
+									<m:Label text="{i18n>Quantity}"/>
+									<table:template>
+										<m:Input value="{objectView>Lease}"/>
+									</table:template>
+								</table:Column>
+								<!--<table:Column width="auto" visible="{= !${Deal>/DealType}}">-->
+								<!--	<m:Label text="Sale Price"/>-->
+								<!--	<table:template>-->
+								<!--		<m:Input value="{dealItemModel>SalesPrice}" type="Number"/>-->
+								<!--	</table:template>-->
+								<!--</table:Column>-->
+								<table:Column width="auto" filterProperty="LeaseType" sortProperty="LeaseType">
+									<m:Label text="{i18n>PerDiem}"/>
+									<table:template>
+										<m:Input value="{objectView>LeaseType}"/>
+									</table:template>
+								</table:Column >
+								<table:Column width="auto" filterProperty="CreatedBy" sortProperty="CreatedBy">
+									<m:Label text="{i18n>City}"/>
+									<table:template>
+										<!--<m:Input value="{dealItemModel>City}" editable="{= !${Deal>/EditFlag}}"/>-->
+										<m:Input value="{objectView>CreatedBy}"/>
+									</table:template>
+								</table:Column>
+								<!--<table:Column width="auto" visible="{= !${Deal>/DealType}}">-->
+								<!--	<m:Label text="Sale Grade"/>-->
+								<!--	<table:template>-->
+								<!--		<m:ComboBox value="{dealItemModel>SalesGrade}">-->
+								<!--			<m:items>-->
+								<!--				<core:Item key="CW" text="CW"/>-->
+								<!--				<core:Item key="A3" text="As Is 3"/>-->
+								<!--				<core:Item key="A4" text="As Is 4"/>-->
+								<!--				<core:Item key="A5" text="As Is 5"/>-->
+								<!--				<core:Item key="IICl" text="IICL"/>-->
+								<!--				<core:Item key="TRD" text="Trading"/>-->
+								<!--				<core:Item key="WWT" text="WWT"/>-->
+								<!--			</m:items>-->
+								<!--		</m:ComboBox>-->
+								<!--	</table:template>-->
+								<!--</table:Column>-->
+								<!--<table:Column width="auto" visible="{= !${Deal>/DealType}}">-->
+								<!--	<m:Label text="Age"/>-->
+								<!--	<table:template>-->
+								<!--		<m:Input value="{dealItemModel>Age}" type="Number"/>-->
+								<!--	</table:template>-->
+								<!--</table:Column>-->
+								<table:Column width="auto" filterProperty="EmployeeResponsible" sortProperty="EmployeeResponsible">
+									<m:Label text="{i18n>NonSeacoLocation}" wrapping="true"/>
+									<table:template>
+										<m:Input value="{objectView>EmployeeResponsible}"/>
+									</table:template>
+								</table:Column>
+								<table:Column width="auto" filterProperty="CustomerName" sortProperty="CustomerName">
+									<m:Label text="{i18n>Term}"/>
+									<table:template>
+										<m:Input value="{objectView>CustomerName}"/>
+									</table:template>
+								</table:Column>
+								<!--<table:Column width="auto">-->
+								<!--	<m:Label text="Currency"/>-->
+								<!--	<table:template>-->
+								<!--		<m:Text text="{dealItemModel>Currency}" wrapping="false"/>-->
+								<!--	</table:template>-->
+								<!--</table:Column>-->
+							</table:columns>
+						</table:Table>
+					</ObjectPageSubSection>
+				</subSections>
+			</ObjectPageSection>
+		</sections>
+		<footer >
+			<m:OverflowToolbar>
+				<m:ToolbarSpacer/>
+				<m:Button text="{i18n>Save}" press="onUpdateDeal" type="Emphasized"/>
+				<m:Button text="{i18n>Cancel}" press="onCancelDeal"/>
+			</m:OverflowToolbar>
+		</footer>
+	</ObjectPageLayout>
+	<!--</m:Page>-->
+</core:FragmentDefinition>

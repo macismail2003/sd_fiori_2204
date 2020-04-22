@@ -1,0 +1,11 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<ViewSettingsDialog id="viewSettingsDialog" confirm="onConfirmViewSettingsDialog">
+		<sortItems>
+			<ViewSettingsItem selected="true" key="Dealno" text="{i18n>Deal}"/>
+			<ViewSettingsItem key="PartnNumbSh" text="{i18n>CustomerLabel}"/>
+			<ViewSettingsItem key="PartnNumbZa" text="{i18n>AccountManagerLabel}"/>
+			<ViewSettingsItem key="PartnNumbZk0" text="{i18n>DealCreatorLabel}"/>
+			<ViewSettingsItem key="Cstcndgrp1" text="{i18n>ProductGroupLabel}"/>
+		</sortItems>
+	</ViewSettingsDialog>
+</core:FragmentDefinition>

@@ -1,0 +1,396 @@
+<core:FragmentDefinition xmlns:uxap="sap.uxap" controllerName="com.seaco.sd_fiori.controller.bookingDisplay" xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc" xmlns:semantic="sap.f.semantic" xmlns:footerbar="sap.ushell.ui.footerbar" xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:f="sap.ui.layout.form" xmlns:core="sap.ui.core" xmlns:app="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:c="com.seaco.sd_fiori.control" xmlns:table="sap.ui.table">
+	<!--<Page id="page" showtitle="Booking">-->
+	<!--	<content>-->
+	<!--<Panel>-->
+	<!--	<content>-->
+	<f:Form editable="true" id="form1">
+		<f:formContainers>
+			<f:FormContainer>
+				<f:formElements>
+					<f:FormElement label="Request Type">
+						<!--<Label class="sapUiMediumMarginBottom1" width="150px" text="Request Type" textAlign="Left"/>-->
+						<f:fields>
+							<FlexBox direction="Row">
+								<ComboBox id="idMainReqType" selectedKey="{bookinginitial>/reqtype}" class="leftPadding" width="100%"
+									items="{ path: 'oReqTypeModel>/type', templateShareable:true }" change="reqtypeSelected">
+									<core:Item key="{oReqTypeModel>key}" text="{oReqTypeModel>text}"/>
+								</ComboBox>
+							</FlexBox>
+						</f:fields>
+					</f:FormElement>
+				</f:formElements>
+			</f:FormContainer>
+			<f:FormContainer>
+				<f:formElements>
+					<f:FormElement label="Lease" visible="{bookinginitial>/NewBookingSelected}">
+						<f:fields>
+							<Input class="leftPadding" id="LeaseId" value="{booking>/Lease}" width="200px" showSuggestion="false" showValueHelp="true"
+								showTableSuggestionValueHelp="false" valueHelpOnly="false" valueLiveUpdate="true" valueHelpRequest="onValueHelpLeaseRequested"
+								suggest="handleSuggestForLease" maxSuggestionWidth="500px" startSuggestion="3" filterSuggests="false" suggestionRows="{booking>/listLease}"
+								suggestionItemSelected="handleSuggestionItemSelectedLease" liveChange="onLeaseFieldLiveChange">
+								<suggestionItems>
+									<core:ListItem key="{booking>Customer}" text="{booking>Customer}" additionalText="{booking>CustomerName}"/>
+								</suggestionItems>
+								<suggestionColumns>
+									<Column hAlign="Begin">
+										<Label text="Lease"/>
+									</Column>
+									<Column hAlign="Center">
+										<Label text="Lease Type"/>
+									</Column>
+								</suggestionColumns>
+								<suggestionRows>
+									<ColumnListItem>
+										<cells>
+											<Label text="{booking>Lease}"/>
+											<Label text="{booking>LeaseType}"/>
+										</cells>
+									</ColumnListItem>
+								</suggestionRows>
+							</Input>
+						</f:fields>
+					</f:FormElement>
+					<f:FormElement label="Booking" visible="{bookinginitial>/ExiBookingSelected}">
+						<f:fields>
+							<FlexBox direction="Row">
+								<Input class="leftPadding" id="ReleaseId" value="{booking>/ActiveBooking}" width="200px" showSuggestion="false" showValueHelp="true"
+									showTableSuggestionValueHelp="false" valueHelpOnly="false" valueLiveUpdate="true" valueHelpRequest="onValueHelpBookingRequested"
+									suggest="handleSuggestForBooking" maxSuggestionWidth="500px" startSuggestion="3" filterSuggests="false"
+									suggestionRows="{booking>/listBooking}" suggestionItemSelected="handleSuggestionItemSelectedBooking">
+									<suggestionItems>
+										<core:ListItem key="{booking>Customer}" text="{booking>Customer}" additionalText="{booking>CustomerName}"/>
+									</suggestionItems>
+									<suggestionColumns>
+										<Column hAlign="Begin">
+											<Label text="Lease"/>
+										</Column>
+										<Column hAlign="Center">
+											<Label text="Lease Type"/>
+										</Column>
+									</suggestionColumns>
+									<suggestionRows>
+										<ColumnListItem>
+											<cells>
+												<Label text="{booking>Lease}"/>
+												<Label text="{booking>LeaseType}"/>
+											</cells>
+										</ColumnListItem>
+									</suggestionRows>
+								</Input>
+							</FlexBox>
+						</f:fields>
+					</f:FormElement>
+				</f:formElements>
+			</f:FormContainer>
+			<!--<f:FormContainer>-->
+			<!--	<f:formElements>-->
+			<!--	</f:formElements>-->
+			<!--</f:FormContainer>-->
+			<f:FormContainer>
+				<f:formElements>
+					<f:FormElement>
+						<f:fields>
+							<RadioButton visible="{bookinginitial>/NewBookingSelected}" class="leftPadding" groupName="GroupA" text="By Product" id="idRBOUT"
+								select="selectRB" selected="true"/>
+							<RadioButton visible="{bookinginitial>/NewBookingSelected}" class="leftPadding" groupName="GroupA" text="By Serial No." id="idRBOBS"
+								select="selectRB" selected="false"/>
+						</f:fields>
+					</f:FormElement>
+				</f:formElements>
+			</f:FormContainer>
+			<f:FormContainer>
+				<f:formElements>
+					<f:FormElement>
+						<f:fields>
+							<ToggleButton pressed="false" visible="{bookinginitial>/DisplayEditToggleVisible}" icon="sap-icon://edit"
+								text="{bookinginitial>/DisplayEditToggleText}" press="onPressDisplayEditToggle"/>
+							<Button class="leftPadding" text="Reset" type="Reject" press="onPressReset"/>
+						</f:fields>
+					</f:FormElement>
+				</f:formElements>
+			</f:FormContainer>
+		</f:formContainers>
+		<f:layout>
+			<f:ResponsiveGridLayout columnsXL="4" columnsL="4" columnsM="3"/>
+		</f:layout>
+	</f:Form>
+	<!--	</content>-->
+	<!--</Panel>-->
+	<uxap:ObjectPageLayout visible="{bookinginitial>/tableVisibility}" id="ObjectPageLayout" enableLazyLoading="false"
+		subSectionLayout="TitleOnLeft" showTitleInHeaderContent="false" showHeaderContent="false">
+		<uxap:sections>
+			<uxap:ObjectPageSection title="Header" visible="{bookinginitial>/tableVisibility}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+							<f:Form editable="true" id="formHeader">
+								<f:formContainers>
+									<f:FormContainer>
+										<f:formElements>
+											<f:FormElement label="Customer">
+												<f:fields>
+													<FlexBox direction="Row">
+														<Text text="{path : 'booking>/Customer'}"/>
+													</FlexBox>
+												</f:fields>
+											</f:FormElement>
+											<!--<f:FormElement label="Lease Type">-->
+											<!--	<f:fields>-->
+											<!--		<FlexBox direction="Row">-->
+											<!--			<Text text="{path : 'booking>/LeaseType'}"/>   -->
+											<!--		</FlexBox>-->
+											<!--	</f:fields>-->
+											<!--</f:FormElement>-->
+											<f:FormElement label="Pickup Start Date">
+												<f:fields>
+													<FlexBox direction="Row">
+														<DatePicker editable="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}" width="75%" value="{booking>/ZzresStart}"
+															valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+													</FlexBox>
+												</f:fields>
+											</f:FormElement>
+											<!--<f:FormElement label="Email">-->
+											<!--	<f:fields>-->
+											<!--		<FlexBox direction="Row">-->
+											<!--			<Input value="{booking>/email}"/>-->
+											<!--		</FlexBox>-->
+											<!--	</f:fields>-->
+											<!--</f:FormElement>-->
+											<f:FormElement id="idFEComboOrderStatus" label="Status" visible="false">
+												<f:fields>
+													<FlexBox direction="Row">
+														<ComboBox id="idComboOrderStatus" enabled="{bookinginitial>/editMode}" showSecondaryValues="true"
+															selectedKey="{path : 'booking>/OrderStatus'}" width="95%" items="{ path: 'oStatusModel>/', templateShareable:true }">
+															<core:ListItem key="{oStatusModel>key}" text="{oStatusModel>text}" additionalText="{oStatusModel>additionalText}"/>
+														</ComboBox>
+													</FlexBox>
+												</f:fields>
+											</f:FormElement>
+										</f:formElements>
+									</f:FormContainer>
+									<f:FormContainer>
+										<f:formElements>
+											<!--<f:FormElement label="Creation Date">-->
+											<!--	<f:fields>-->
+											<!--		<FlexBox direction="Row">-->
+											<!--<Text text="{path: 'booking>/CreationDate', type: 'sap.ui.model.type.Date', formatOptions: { style: 'short' }}"/>-->
+											<!--			<Text text="{booking>/CreationDate}"/>-->
+											<!--		</FlexBox>-->
+											<!--	</f:fields>-->
+											<!--</f:FormElement>-->
+											<!--<f:FormElement label="Created By">-->
+											<!--	<f:fields>-->
+											<!--		<FlexBox direction="Row">-->
+											<!--			<Text text="{path : 'booking>/CreatedBy'}"/>-->
+											<!--		</FlexBox>-->
+											<!--	</f:fields>-->
+											<!--</f:FormElement>-->
+											<!--<f:FormElement label="Employee Responsible">-->
+											<!--	<f:fields>-->
+											<!--		<FlexBox direction="Row">-->
+											<!--			<Text text="{path : 'booking>/EmployeeResponsible'}"/>-->
+											<!--		</FlexBox>-->
+											<!--	</f:fields>-->
+											<!--</f:FormElement>-->
+											<f:FormElement label="Lease">
+												<f:fields>
+													<FlexBox direction="Row">
+														<Text text="{path : 'booking>/Lease'}"/>
+													</FlexBox>
+												</f:fields>
+											</f:FormElement>
+											<f:FormElement label="Pickup End Date">
+												<f:fields>
+													<FlexBox direction="Row">
+														<DatePicker width="75%" editable="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}" value="{booking>/ZzresEnd}"
+															valueFormat="dd.MM.yyyy" displayFormat="dd.MM.yyyy"/>
+													</FlexBox>
+												</f:fields>
+											</f:FormElement>
+										</f:formElements>
+									</f:FormContainer>
+								</f:formContainers>
+								<f:layout>
+									<f:ResponsiveGridLayout id="layoutHeader" columnsXL="2" columnsL="2" columnsM="1"/>
+								</f:layout>
+							</f:Form>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection title="Items" visible="{bookinginitial>/tableVisibility}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+							<c:CopyPasteTable id="idTable" rows="{/items}" selectionMode="Multi" visibleRowCountMode="Fixed" visibleRowCount="5">
+								<c:extension>
+									<Toolbar design="Transparent" class="sapUiMediumMarginTop">
+										<!--<Title text="Price Items" class="sapUiSmallMarginBottom"/>-->
+										<ToolbarSpacer/>
+										<Button visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}" text="Add" press="addRowItemsTable"/>
+										<Button visible="{path: 'bookinginitial>/editMode', formatter:'.formatter.modeCheck'}" text="Delete" press="deleteRowItemsTable"/>
+										<Button text="Conditions" app:paorcon="CONDITIONS" press="onPressVCON"
+											visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationPassedCPAGVCON'}"/>
+										<Button text="DSS Data Under Release" app:paorcon="DSSDATA" press="onPressDSS"
+											visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'},{path:'booking>/LeaseType'}], formatter:'.formatter.validationPassedDSS'}"/>
+									</Toolbar>
+								</c:extension>
+								<c:columns>
+									<table:Column width="90px">
+										<Label text="Item No"/>
+										<table:template>
+											<Text text="{ItemNo}"/>
+										</table:template>
+									</table:Column>
+									<!--visible="{= !${booking>/unitTypeEditable}}-->
+									<table:Column width="180px"
+										visible="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'},{path:'bookinginitial>/validationPassed'}], formatter:'.formatter.modeCheckUnitTypeNonEditable'}">
+										<Label text="Serial No"/>
+										<table:template>
+											<Input value="{SerialNo}"
+												editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeNonEditable'}"
+												liveChange="setValidationFailed"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="150px">
+										<Label text="Product"/>
+										<table:template>
+											<ComboBox
+												editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}"
+												value="{UnitType}" items="{ path: 'oProdModel>/Prods', templateShareable:true }" selectionChange="setValidationFailed">
+												<core:Item key="{oProdModel>key}" text="{oProdModel>text}"/>
+											</ComboBox>
+										</table:template>
+									</table:Column>
+									<!--<table:Column width="150px" visible="false">-->
+									<!--	<Label text="Prod. Hier"/>-->
+									<!--	<table:template>-->
+									<!--		<ComboBox editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}" value="{ProdHier}" items="{ path: 'oProdHierModel>/Prods', templateShareable:true }">-->
+									<!--			<core:Item key="{oProdHierModel>key}" text="{oProdHierModel>text}"/>-->
+									<!--		</ComboBox>-->
+									<!--	</table:template>-->
+									<!--</table:Column>-->
+									<table:Column width="120px">
+										<Label text="Req. Qty" wrapping="true"/>
+										<table:template>
+											<Input value="{RequestedQuan}" change="setValidationFailed"
+												editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="150px">
+										<Label text="Location"/>
+										<table:template>
+											<ComboBox showSecondaryValues="true"
+												editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}"
+												selectedKey="{LocCode}" value="{Location}" selectionChange="onChangeLocation" items="{ path: 'oCityModel>/Cities', templateShareable:true }">
+												<core:ListItem key="{oCityModel>key}" text="{oCityModel>text}" additionalText="{oCityModel>key}"/>
+											</ComboBox>
+										</table:template>
+									</table:Column>
+									<table:Column width="50px"
+										visible="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}">
+										<table:template>
+											<core:Icon src="sap-icon://check-availability" press="onPressAvailability"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="100px">
+										<Label text="Depot Code"/>
+										<table:template>
+											<Input value="{DepoCode}" type="Number" liveChange="onGetLocationFromDepot"
+												editable="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeEditable'}"/>
+										</table:template>
+									</table:Column>
+									<!--<table:Column width="120px">-->
+									<!--	<Label text="Rel. Qty" wrapping="true"/>-->
+									<!--	<table:template>-->
+									<!--		<Text text="{ReleasedQuan}"/>-->
+									<!--	</table:template>-->
+									<!--</table:Column>-->
+									<table:Column width="90px">
+										<Label text="Picked Qty" wrapping="true"/>
+										<table:template>
+											<Text text="{PickQuan}"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="90px">
+										<Label text="Not Picked Qty" wrapping="true"/>
+										<table:template>
+											<Text text="{NotpickQuan}"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="60px">
+										<Label text="DSS Data" wrapping="true"/>
+										<table:template>
+											<core:Icon color="#009f10" visible="{dssVisible}" src="sap-icon://sys-enter-2"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="80px">
+										<Label text="Conditions" wrapping="true"/>
+										<table:template>
+											<core:Icon color="#009f10" visible="{condVisible}" src="sap-icon://sys-enter-2"/>
+										</table:template>
+									</table:Column>
+									<table:Column width="auto">
+										<Label text="Depot Comment"/>
+										<table:template>
+											<Input value="{Comments}" editable="{bookinginitial>/editMode}"/>
+										</table:template>
+									</table:Column>
+									<!--<table:Column width="110px">-->
+									<!--	<Label text=""/>-->
+									<!--	<table:template>-->
+									<!--		<Button text="Cancel" enabled="{cancelEnabled}" press="onCancelButtonPress"/>-->
+									<!--	</table:template>-->
+									<!--</table:Column>-->
+									<!--<table:Column>-->
+									<!--	<Label text="Last Cargo"/>-->
+									<!--	<table:template>-->
+									<!--		<Input value="{LastCargo}"/>-->
+									<!--	</table:template>-->
+									<!--</table:Column>-->
+								</c:columns>
+								<!--</table:Table>-->
+							</c:CopyPasteTable>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection title="Price Agreement"
+				visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationPassedCPAGVCON'}">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection>
+						<uxap:blocks>
+							<core:Fragment id="idbookingCPAGDialog" fragmentName="com.seaco.sd_fiori.view.fragments.bookingCPAGDialog" type="XML"/>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+	<!--</content>-->
+	<!--<footer>-->
+	<OverflowToolbar visible="{bookinginitial>/tableVisibility}">
+		<Button id="messagePopoverBtn" icon="sap-icon://message-popup" type="Emphasized" text="{=${message>/}.length}"
+			visible="{=!!${message>/}.length}" press="handleMessagePopoverPress"/>
+		<!--<ToggleButton visible="{bookinginitial>/ExiBookingSelected}" icon="sap-icon://edit" press="onPressDisplayEditToggle"/>-->
+		<ToolbarSpacer/>
+		<Text text="v 1.1.4"></Text>
+		<ToolbarSpacer/>
+		<!--<Button text="Edit" press="onPressEDIT"-->
+		<!--	visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationPassed'}"/>-->
+		<Button text="Check"
+			visible="{parts:[{path:'booking>/unitTypeEditable'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.modeCheckUnitTypeNonEditable'}"
+			app:saveorsubmit="C" press="onValidate" type="Emphasized"/>
+		<Button id="idButtonValidate" text="Validate" app:saveorsubmit="V" press="onValidate" type="Emphasized"
+			visible="{parts:[{path:'bookinginitial>/validationFailed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationFailed'}"/>
+		<!--<Button text="Price Agreement" app:paorcon="PRICEAGREEMENT" press="onPressCPAG"-->
+		<!--	visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationPassedCPAGVCON'}"/>-->
+		<Button text="Submit" app:saveorsubmit="X" press="onSaveFinal"
+			visible="{parts:[{path:'bookinginitial>/validationPassed'},{path:'bookinginitial>/editMode'}], formatter:'.formatter.validationPassed'}"/>
+	</OverflowToolbar>
+	<!--</footer>-->
+	<!--</Page>-->
+</core:FragmentDefinition>
